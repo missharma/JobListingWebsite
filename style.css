@@ -1,0 +1,61 @@
+/* General styles for the body and page layout */
+
+ body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+    padding-top: 20px;
+}
+
+/* Header styling  */
+ h1 {
+    display: flex;
+    align-items: center;
+    font-family: sans-serif;
+    position: absolute;
+    top: 0%;
+    font-size: 2.5rem;
+    color: #7575c6;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Main container for job listings  */
+#job-listing {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Individual job listing styling */
+  
+.job { 
+       margin: 10px;
+      margin-top: 120px;
+      font-family: Arial, sans-serif;
+      margin-bottom: 20px;
+      border: 1px solid black;
+      padding: 15px;
+      border-radius: 5px;
+      border-width: 2px;
+ }
+        
+.job h2 { 
+         margin: 0;
+ }
+
+/* Container for better spacing on smaller screens */
+ @media (max-width: 768px) {
+    body {
+        padding-top: 10px;
+    }
+} 
+
+
+
