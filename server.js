@@ -1,21 +1,30 @@
-// Import necessary packages
+require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors'); // To handle CORS issues (if needed)
+const path = require('path'); // To handle file paths
 
 // Create an express app
 const app = express();
-const port = 5000; // Server port
+const PORT = process.env.PORT || 5000; // Dynamic port for deployment or 5000 for local
 
 // Enable CORS
 app.use(cors());
 
+// Middleware to parse JSON and URL-encoded data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, 'public'))); // 'public' folder is where you store CSS, JS, images
+
 // MySQL database connection setup
 const db = mysql.createConnection({
-    host: 'localhost', // Database host (usually localhost for local setups)
-    user: 'root', // Your MySQL username
-    password: '#MissSharma', // Your MySQL password
-    database: 'JobsList' // Your database name
+    host: process.env.DB_HOST || 'localhost', // Use environment variables for deployment, fallback to localhost
+    user: process.env.DB_USER || 'root', // MySQL username, fallback to 'root'
+    password: process.env.DB_PASSWORD || 'MissSharma', // MySQL password, fallback to 'MissSharma'
+    database: process.env.DB_NAME || 'JobsList' // MySQL database name, fallback to 'JobsList'
 });
 
 // Connect to the database
@@ -27,12 +36,19 @@ db.connect(err => {
     console.log('Connected to the MySQL database');
 });
 
+// Root route (this will prevent the "Cannot GET /" error)
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html')); 
+    // Serve HTML file, make sure this file exists
+});
+
 // Endpoint to get job listings from the database
 app.get('/jobs', (req, res) => {
-    const query = 'SELECT * FROM jobs';
+    const query = 'SELECT * FROM jobs'; // Make sure 'jobs' table exists in your database
 
     db.query(query, (err, results) => {
         if (err) {
+            console.error('Error fetching job data: ', err);
             res.status(500).send('Error fetching job data from the database');
             return;
         }
@@ -41,6 +57,6 @@ app.get('/jobs', (req, res) => {
 });
 
 // Start the server
-app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
 });
